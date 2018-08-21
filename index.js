@@ -11,10 +11,19 @@
 
     app.use(bodyParser.json()); //JSON middleman
 
+    // CORS
+    app.use(function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        next();
+    });
+
     //Route to get user match statistics from League of legends API
     // NOTE: in order to use the API, you have to install the game client and pick a summoner name! DOH (Takes a bit to DL)
-    app.get("/matches/:summonerName", function(req, res) {
+    app.get("/api/:summonerName/matches.json", function(req, res) {
         var summonerName = req.params.summonerName;
+
+        if (!summonerName) { return res.json({ err: "Please enter a summoner name" }) }
 
         // FIRST: make a call to get the user's accountId
         leagueLib.getAccountBySummonerName(summonerName, function(err, account) {

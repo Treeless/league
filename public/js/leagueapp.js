@@ -1,9 +1,10 @@
+const API = "http://localhost:8080/api";
 class TodoApp extends React.Component {
     // LEARNING REACT: Code from https://reactjs.org/ and changed
 
     constructor(props) {
         super(props);
-        this.state = { items: [], text: '' };
+        this.state = { account: {}, matches: [], text: '' };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -15,15 +16,11 @@ class TodoApp extends React.Component {
             React.createElement(
                 "h3",
                 null,
-                "TODO"
+                "League of Legends Statistics"
             ),
-            React.createElement(MatchList, { items: this.state.items }),
+            React.createElement(MatchList, { matches: this.state.matches }),
             React.createElement(
                 "form", { onSubmit: this.handleSubmit },
-                React.createElement(
-                    "label", { htmlFor: "new-todo" },
-                    "What needs to be done?"
-                ),
                 React.createElement("input", {
                     id: "new-todo",
                     onChange: this.handleChange,
@@ -32,42 +29,56 @@ class TodoApp extends React.Component {
                 React.createElement(
                     "button",
                     null,
-                    "Add #",
-                    this.state.items.length + 1
+                    "Search"
                 )
             )
         );
     }
 
     handleChange(e) {
-        this.setState({ text: e.target.value });
+        this.setState({ text: e.target.value }); //Set the summoner name
     }
 
     handleSubmit(e) {
         e.preventDefault();
-
+        var self = this;
 
         if (!this.state.text.length) {
+            // TODO throw error
             return;
         }
-        const newItem = {
-            text: this.state.text,
-            id: Date.now()
-        };
-        this.setState(prevState => ({
-            items: prevState.items.concat(newItem),
-            text: ''
-        }));
+
+        // TODO show loading
+        console.log("DISPLAY LOADING ICON (change state)");
+
+        // MAKE API CALL
+        axios.get(API + '/' + this.state.text + '/matches.json', {
+                crossdomain: true
+            })
+            .then(function(response) {
+                var data = response.data;
+                console.log(data);
+                self.setState(prevState => ({
+                    account: data.account,
+                    matches: data.matches
+                }));
+            })
+            .catch(function(error) {
+                console.log(error);
+                // TODO display error
+            });
     }
 }
 
 class MatchList extends React.Component {
     render() {
+
+        console.log(this.props);
         return React.createElement(
             "ul",
             null,
-            this.props.items.map(match => React.createElement(
-                "li", { key: item.id },
+            this.props.matches.map(match => React.createElement(
+                "li", { key: match.gameId },
                 match //TODO, make more sophisticated
             ))
         );
