@@ -18,20 +18,32 @@
 
         // FIRST: make a call to get the user's accountId
         leagueLib.getAccountBySummonerName(summonerName, function(err, account) {
-            console.log(err, account);
-            if (err) {
-                res.json({ err: err });
-                return;
-            }
+            console.log("get account information by summonerName:", summonerName)
+            if (err) { return res.json({ err: err }) }
             // SECOND: Now, using the accountId, get list of matches (10)
             leagueLib.getMatchesByAccountId(account.accountId, function(err, matches) {
-                console.log(err, matches);
+                console.log("get matches by accountId:", account.accountId);
+                if (err) { return res.json({ err: err }) }
 
-                //TODO
                 // Get the last 10 match Ids
-                // Trim down to only the specific data we need for the front end
+                var matchIds = matches.map(function(match) {
+                    return match.gameId;
+                });
 
-                res.json({ account: account, matches: matches });
+                ///We only care about the last 10 (for now.. paging can come later via API)
+                matchIds = matchIds.slice(0, (matchIds.length < 10) ? matchIds.length : 10);
+
+                //THIRD: get the match information for the list of match ids
+                leagueLib.getMatchesByList(matchIds, function(err, detailedMatchList) {
+                    console.log("get detailed match list: length", detailedMatchList.length);
+                    if (err) { return res.json({ err: err }) }
+
+                    // TODO: Trim down to only the specific data we need for the front end
+
+                    //NOTE TO SELF: Front end will probably need some sort of loading screen 
+                    //               while we get the detailed data (takes a few seconds).
+                    res.json({ account: account, matches: detailedMatchList });
+                })
             });
         });
     });
