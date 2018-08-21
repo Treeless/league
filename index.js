@@ -57,6 +57,7 @@
                     var trimmedDetailedMatchList = detailedMatchList.map(function(detailedMatch) {
                         var data = {
                             outcome: null,
+                            gameId: detailedMatch.gameId,
                             gameLength: detailedMatch.gameDuration,
                             summonerName: null,
                             summonerSpellRunes: [],
@@ -73,7 +74,6 @@
                         var participantId = null;
                         for (var i = 0; i < detailedMatch.participantIdentities.length; i++) {
                             var participant = detailedMatch.participantIdentities[i];
-                            console.log("participant check:", participant.player.accountId, account.accountId)
                             if (participant.player.accountId == account.accountId) {
                                 participantId = participant.participantId;
                                 data.summonerName = participant.player.summonerName;
@@ -148,7 +148,7 @@
         // TODO: Get league of legends static data.
         //   Check if we have it locally stored
         //   if not do API call. (THIS gets heavily rate limited for up to an hour.)
-        console.log("Retrieving league of legends static data...");
+        // console.log("Retrieving league of legends static data...");
         // leagueLib.getStaticLeagueData(function(staticData) {
         //     static = staticData;
         //     console.log(static);

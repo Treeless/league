@@ -1,1 +1,31 @@
-// todo
+.match-listing {
+    width: 100%;
+    border: 1px solid black;
+    border-radius: 2px;
+    margin-bottom: 4px;
+    padding: 10px;
+}
+
+.victory {
+    background-color: lightblue;
+}
+
+.loss {
+    background-color: indianred;
+    #block1 #outcome {}
+}
+
+#outcome {
+    font-size: 20px;
+    font-style: oblique;
+}
+
+.block {
+    display: inline-block;
+    margin: 5px;
+}
+
+#spells {
+    width: 100%;
+    text-align: center;
+}
