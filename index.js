@@ -102,21 +102,22 @@
 
                         // Okay, now get the information we need
                         data.outcome = player.stats.win;
-                        data.gameLength =
-                            data.championName = player.championId; //[name lookup required]
-                        data.summonerSpellRunes = player.runes; //[Name lookups required]
+                        data.gameLength = data.championName = player.championId; //[name lookup required]
+                        data.summonerSpellRunes = player.runes; //[Name lookups required] {ART via name, difficult to lookup}
                         data.kills = player.stats.kills;
                         data.deaths = player.stats.deaths;
                         data.assists = player.stats.assists;
                         data.KDA = ((data.kills + (data.assists / 3)) / data.deaths); //[(K+(A/3)]/D)
+
+                        var itemAPI = "http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/";
                         data.items = [
-                            player.stats.item0,
-                            player.stats.item1,
-                            player.stats.item2,
-                            player.stats.item3,
-                            player.stats.item4,
-                            player.stats.item5,
-                            player.stats.item6
+                            itemAPI + player.stats.item0 + ".png",
+                            itemAPI + player.stats.item1 + ".png",
+                            itemAPI + player.stats.item2 + ".png",
+                            itemAPI + player.stats.item3 + ".png",
+                            itemAPI + player.stats.item4 + ".png",
+                            itemAPI + player.stats.item5 + ".png",
+                            itemAPI + player.stats.item6 + ".png"
                         ]; //[name lookups required]
                         data.championLevel = player.stats.champLevel;
                         data.totalCreepScore = player.stats.totalMinionsKilled;
@@ -128,7 +129,8 @@
                         // NOTE: In the future, save this data locally to json files that can be loaded in. 
                         //       Request updates every few days.
 
-                        //TODO
+                        //TODO. Had issues finding all the little files
+                        //      I needed to download and parse into order to find the names of the images to load, or names to display.
 
                         return data;
                     });
@@ -148,10 +150,10 @@
         // TODO: Get league of legends static data.
         //   Check if we have it locally stored
         //   if not do API call. (THIS gets heavily rate limited for up to an hour.)
-        // console.log("Retrieving league of legends static data...");
-        // leagueLib.getStaticLeagueData(function(staticData) {
-        //     static = staticData;
-        //     console.log(static);
-        // });
+        // API has been DEPRECATED
+        console.log("Retrieving league of legends static data...");
+        leagueLib.getStaticLeagueData(function(staticData) {
+            static = staticData;
+        });
     });
 }());

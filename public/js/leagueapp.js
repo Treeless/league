@@ -77,6 +77,7 @@ class TodoApp extends React.Component {
     }
 }
 
+// List of matches
 class MatchList extends React.Component {
     render() {
 
@@ -99,6 +100,7 @@ class MatchList extends React.Component {
     }
 }
 
+//Each match item component in the match list componen
 class MatchItem extends React.Component {
   render() {
     console.log(this.props);
@@ -118,12 +120,12 @@ class MatchItem extends React.Component {
             </div>
             <div id='spells'>
                 <div>
-                    <img src='...' />
-                    <img src='...' />
+                    <img src="..." />
+                    <img src="..." />
                 </div>
                 <div>
-                    <img src='...' />
-                    <img src='...' />
+                    <img src="..." />
+                    <img src="..." />
                 </div>
             </div>
         </div>
@@ -148,16 +150,16 @@ class MatchItem extends React.Component {
         <div class='block' id='block5'>
             <div id='items-bought'>
                 <div>
-                    <img src='...' />
-                    <img src='...' />
-                    <img src='...' />
-                    <img src='...' />
+                    <img src={ this.props.items[0]} />
+                    <img src={ this.props.items[1]} />
+                    <img src={ this.props.items[2]} />
+                    <img src={ this.props.items[3]} />
                 </div>
                 <div>
-                    <img src='...' />
-                    <img src='...' />
-                    <img src='...' />
-                    <img src='...' />
+                    <img src={ this.props.items[4]} />
+                    <img src={ this.props.items[5]} />
+                    <img src={ this.props.items[6]} />
+                    <img src={ this.props.items[7]} />
                 </div>
             </div>
         </div>

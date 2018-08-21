@@ -29,3 +29,10 @@
     width: 100%;
     text-align: center;
 }
+
+#items-bought + #spells {
+    img {
+        width: 25px;
+        height: 25px;
+    }
+}
