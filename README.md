@@ -1,6 +1,8 @@
 # League Application
 Displaying match statistics for the given League of Legends player. Learning ReactJS as I go.
 
+<img src="https://github.com/Treeless/league/blob/master/static/demo.png?raw=true" width="600px"/>
+
 ## To run the project:
 
 * `npm install && gulp`
