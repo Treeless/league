@@ -26,6 +26,11 @@
             // SECOND: Now, using the accountId, get list of matches (10)
             leagueLib.getMatchesByAccountId(account.accountId, function(err, matches) {
                 console.log(err, matches);
+
+                //TODO
+                // Get the last 10 match Ids
+                // Trim down to only the specific data we need for the front end
+
                 res.json({ account: account, matches: matches });
             });
         });
