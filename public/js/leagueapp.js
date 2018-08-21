@@ -82,7 +82,7 @@ class MatchList extends React.Component {
             null,
             this.props.matches.map(match => React.createElement(
                 "li", { key: match.gameId, className: "match-element" },
-                React.createElement(
+                React.createElement(  
                     "div",
                     null,
                     "gameDuration:" + match.gameDuration

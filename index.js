@@ -29,6 +29,7 @@
         leagueLib.getAccountBySummonerName(summonerName, function(err, account) {
             console.log("get account information by summonerName:", summonerName)
             if (err) { return res.json({ err: err }) }
+
             // SECOND: Now, using the accountId, get list of matches (10)
             leagueLib.getMatchesByAccountId(account.accountId, function(err, matches) {
                 console.log("get matches by accountId:", account.accountId);
@@ -44,19 +45,17 @@
 
                 //THIRD: get the match information for the list of match ids
                 leagueLib.getMatchesByList(matchIds, function(err, detailedMatchList) {
-                    console.log("get detailed match list: length", detailedMatchList.length);
                     if (err) { return res.json({ err: err }) }
 
-                    // TODO: Trim down to only the specific data we need for the front end
+                    // Now Trim down to only the specific data we need for the front end,,and get the specific information we need
                     var trimmedDetailedMatchList = detailedMatchList.map(function(detailedMatch) {
                         var data = {
-                            outcome: "victory",
-                            gameLength: 0,
-                            summonerName: "name",
-                            summonerSpellsRunes: [],
-                            championPlayed: "name",
+                            outcome: null,
+                            gameLength: detailedMatch.gameDuration,
+                            summonerName: null,
+                            summonerSpellRunes: [],
+                            championPlayed: null,
                             KDA: 0.00,
-                            itemsBought: [],
                             championLevel: 0,
                             totalCreepScore: 0,
                             creepScorePerMin: 0
@@ -64,12 +63,63 @@
 
                         // Go through participantIdentities
                         //  player.accountID
-                        //  get participantId and save
+                        //  get participantId and store
+                        var participantId = null;
+                        for (var i = 0; i < detailedMatch.participantIdentities.length; i++) {
+                            var participant = detailedMatch.participantIdentities[i];
+                            console.log("participant check:", participant.player.accountId, account.accountId)
+                            if (participant.player.accountId == account.accountId) {
+                                participantId = participant.participantId;
+                                data.summonerName = participant.player.summonerName;
+                                break;
+                            }
+                        }
+                        if (participantId == null) {
+                            console.log("COULD NOT FIND PARTICIPANT ID")
+                            return null;
+                        }
 
                         //Using the participant id, go through participants array an find our participant
-                        // Save win: stats.win championId [name lookup req], runes (runeId, rank), KDA (via stats(kills, deaths, assists), items (stats.item0..6 [names lookup req]), championLevel (stats.champLevel), totalCreepScore: totalMinionsKilled, creepScorePerMin: totalMinionsKilled/(gameLength/60) )
-                        //
+                        var player = null;
+                        for (i = 0; i < detailedMatch.participants.length; i++) {
+                            var participant = detailedMatch.participants[i];
+                            if (participant.participantId == participantId) {
+                                player = participant;
+                                break;
+                            }
+                        }
 
+                        if (player == null) {
+                            console.log("COULD NOT FIND PARTICIPANT ID of ", participantId, " in player array")
+                            return null;
+                        }
+
+                        // Okay, now get the information we need
+                        data.outcome = player.stats.win;
+                        data.gameLength =
+                            data.championName = player.championId; //[name lookup required]
+                        data.summonerSpellRunes = player.runes; //[Name lookups required]
+                        data.kills = player.stats.kills;
+                        data.deaths = player.stats.deaths;
+                        data.assists = player.stats.assists;
+                        data.KDA = ((data.kills + (data.assists / 3)) / data.deaths); //[(K+(A/3)]/D)
+                        data.items = [
+                            player.stats.item0,
+                            player.stats.item1,
+                            player.stats.item2,
+                            player.stats.item3,
+                            player.stats.item4,
+                            player.stats.item5,
+                            player.stats.item6
+                        ]; //[name lookups required]
+                        data.championLevel = player.stats.champLevel;
+                        data.totalCreepScore = player.stats.totalMinionsKilled;
+                        data.creepScorePerMin = data.totalCreepScore / (data.gameLength / 60);
+
+                        // Okay, now lets lookup the informantion that is only via IDs
+                        //TODO
+
+                        return data;
                     });
 
                     //NOTE TO SELF: Front end will probably need some sort of loading screen 
