@@ -18,7 +18,6 @@ class TodoApp extends React.Component {
                 null,
                 "League of Legends Statistics"
             ),
-            React.createElement(MatchList, { matches: this.state.matches }),
             React.createElement(
                 "form", { onSubmit: this.handleSubmit },
                 React.createElement("input", {
@@ -31,7 +30,8 @@ class TodoApp extends React.Component {
                     null,
                     "Search"
                 )
-            )
+            ),
+            React.createElement(MatchList, { matches: this.state.matches }),
         );
     }
 
@@ -73,13 +73,20 @@ class TodoApp extends React.Component {
 class MatchList extends React.Component {
     render() {
 
-        console.log(this.props);
+        //DEV
+        if (this.props.matches.length > 0)
+            console.log(this.props.matches[0]);
+
         return React.createElement(
             "ul",
             null,
             this.props.matches.map(match => React.createElement(
-                "li", { key: match.gameId },
-                match //TODO, make more sophisticated
+                "li", { key: match.gameId, className: "match-element" },
+                React.createElement(
+                    "div",
+                    null,
+                    "gameDuration:" + match.gameDuration
+                ),
             ))
         );
     }

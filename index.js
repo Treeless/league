@@ -48,6 +48,29 @@
                     if (err) { return res.json({ err: err }) }
 
                     // TODO: Trim down to only the specific data we need for the front end
+                    var trimmedDetailedMatchList = detailedMatchList.map(function(detailedMatch) {
+                        var data = {
+                            outcome: "victory",
+                            gameLength: 0,
+                            summonerName: "name",
+                            summonerSpellsRunes: [],
+                            championPlayed: "name",
+                            KDA: 0.00,
+                            itemsBought: [],
+                            championLevel: 0,
+                            totalCreepScore: 0,
+                            creepScorePerMin: 0
+                        };
+
+                        // Go through participantIdentities
+                        //  player.accountID
+                        //  get participantId and save
+
+                        //Using the participant id, go through participants array an find our participant
+                        // Save win: stats.win championId [name lookup req], runes (runeId, rank), KDA (via stats(kills, deaths, assists), items (stats.item0..6 [names lookup req]), championLevel (stats.champLevel), totalCreepScore: totalMinionsKilled, creepScorePerMin: totalMinionsKilled/(gameLength/60) )
+                        //
+
+                    });
 
                     //NOTE TO SELF: Front end will probably need some sort of loading screen 
                     //               while we get the detailed data (takes a few seconds).
