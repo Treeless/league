@@ -1,6 +1,10 @@
 (function() {
     // Author: Matthew Rowlandson
     // Purpose: Server side for league of legends application
+
+    // If I have time, things I want to change, use promises and async/await to make this more cleaner
+    //      move certain logic into its own libraries
+
     const express = require("express");
     const bodyParser = require("body-parser")
 
@@ -8,6 +12,8 @@
 
     const app = express();
     const leagueLib = require("./lib/league.lib.js");
+
+    var static = {}; //information loaded from riot (see league.lib.js : getStaticLeagueData() )
 
     app.use(bodyParser.json()); //JSON middleman
 
@@ -114,9 +120,14 @@
                         ]; //[name lookups required]
                         data.championLevel = player.stats.champLevel;
                         data.totalCreepScore = player.stats.totalMinionsKilled;
-                        data.creepScorePerMin = data.totalCreepScore / (data.gameLength / 60);
+                        data.creepScorePerMin = data.totalCreepScore / (data.gameLength);
 
-                        // Okay, now lets lookup the informantion that is only via IDs
+                        // Okay, now lets lookup the informantion that is only currently as IDs
+                        //This information will be in memory, as at the start of our node server
+                        //  we populate these static pieces of data/
+                        // NOTE: In the future, save this data locally to json files that can be loaded in. 
+                        //       Request updates every few days.
+
                         //TODO
 
                         return data;
@@ -124,7 +135,7 @@
 
                     //NOTE TO SELF: Front end will probably need some sort of loading screen 
                     //               while we get the detailed data (takes a few seconds).
-                    res.json({ account: account, matches: detailedMatchList });
+                    res.json({ account: account, matches: trimmedDetailedMatchList });
                 })
             });
         });
@@ -132,6 +143,15 @@
 
     //Setup the server to be listening on var PORT)
     app.listen(PORT, function() {
-        console.log("App is listening on port", PORT)
+        console.log("App is listening on port", PORT);
+
+        // TODO: Get league of legends static data.
+        //   Check if we have it locally stored
+        //   if not do API call. (THIS gets heavily rate limited for up to an hour.)
+        console.log("Retrieving league of legends static data...");
+        // leagueLib.getStaticLeagueData(function(staticData) {
+        //     static = staticData;
+        //     console.log(static);
+        // });
     });
 }());
