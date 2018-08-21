@@ -18,8 +18,14 @@
 
         // FIRST: make a call to get the user's accountId
         leagueLib.getAccountBySummonerName(summonerName, function(err, account) {
+            console.log(err, account);
+            if (err) {
+                res.json({ err: err });
+                return;
+            }
             // SECOND: Now, using the accountId, get list of matches (10)
             leagueLib.getMatchesByAccountId(account.accountId, function(err, matches) {
+                console.log(err, matches);
                 res.json({ account: account, matches: matches });
             });
         });
